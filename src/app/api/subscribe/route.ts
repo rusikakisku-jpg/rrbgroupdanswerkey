@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+
+export const runtime = 'edge';
 import { addSubscriber } from '@/lib/db';
 
 export async function POST(request: Request) {

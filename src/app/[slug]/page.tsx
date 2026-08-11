@@ -10,6 +10,7 @@ import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import { Calendar, Tag } from 'lucide-react';
 
+export const runtime = 'edge';
 export const revalidate = 0;
 
 const POSTS_PER_PAGE = 5;

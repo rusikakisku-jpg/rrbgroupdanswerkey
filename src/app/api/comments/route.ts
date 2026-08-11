@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getComments, addComment } from '@/lib/db';
 
+export const runtime = 'edge';
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const postId = searchParams.get('post_id');

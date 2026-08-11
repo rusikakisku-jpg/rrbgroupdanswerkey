@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { getPosts } from '@/lib/db';
 import { categoryToSlug } from '@/lib/utils';
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 

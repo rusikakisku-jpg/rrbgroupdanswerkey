@@ -4,6 +4,7 @@ import PostCard from '@/components/PostCard';
 import Sidebar from '@/components/Sidebar';
 import Pagination from '@/components/Pagination';
 
+export const runtime = 'edge';
 export const revalidate = 0;
 
 const POSTS_PER_PAGE = 5;

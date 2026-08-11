@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getPosts, savePost, deletePost } from '@/lib/db';
 
+export const runtime = 'edge';
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get('category') || undefined;
