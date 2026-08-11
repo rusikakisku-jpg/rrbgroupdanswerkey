@@ -8,6 +8,18 @@ import Pagination from '@/components/Pagination';
 
 export const revalidate = 0;
 
+export async function generateStaticParams() {
+  const cats = ['notification', 'answer-key', 'admit-card', 'result', 'syllabus'];
+  const pages = ['1', '2', '3'];
+  const params: Array<{ category: string; page: string }> = [];
+  cats.forEach((category) => {
+    pages.forEach((page) => {
+      params.push({ category, page });
+    });
+  });
+  return params;
+}
+
 const POSTS_PER_PAGE = 5;
 
 interface CategoryPaginatedProps {

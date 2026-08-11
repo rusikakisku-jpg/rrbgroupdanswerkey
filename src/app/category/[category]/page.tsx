@@ -7,6 +7,16 @@ import Pagination from '@/components/Pagination';
 
 export const revalidate = 0;
 
+export async function generateStaticParams() {
+  return [
+    { category: 'notification' },
+    { category: 'answer-key' },
+    { category: 'admit-card' },
+    { category: 'result' },
+    { category: 'syllabus' },
+  ];
+}
+
 const POSTS_PER_PAGE = 5;
 
 interface CategoryPageProps {

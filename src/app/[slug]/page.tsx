@@ -11,6 +11,19 @@ import { Calendar, Tag } from 'lucide-react';
 
 export const revalidate = 0;
 
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  const postSlugs = posts.map((p) => ({ slug: p.slug }));
+  const catSlugs = [
+    { slug: 'notification' },
+    { slug: 'answer-key' },
+    { slug: 'admit-card' },
+    { slug: 'result' },
+    { slug: 'syllabus' },
+  ];
+  return [...catSlugs, ...postSlugs];
+}
+
 const POSTS_PER_PAGE = 5;
 
 interface SlugPageProps {
