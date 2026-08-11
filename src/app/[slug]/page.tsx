@@ -9,7 +9,7 @@ import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import { Calendar, Tag } from 'lucide-react';
 
-export const revalidate = 0;
+export const dynamic = 'force-static';
 
 export async function generateStaticParams() {
   const posts = await getPosts();

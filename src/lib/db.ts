@@ -16,7 +16,7 @@ export async function getPosts(options?: { category?: string; status?: string; l
     if (options?.order) params.append('order', options.order);
 
     const res = await fetch(`${API_BASE}/api/posts?${params.toString()}`, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     if (res.ok) {
       return await res.json();
@@ -33,7 +33,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
     const cleanSlug = encodeURIComponent(slug.trim().toLowerCase());
     const res = await fetch(`${API_BASE}/api/posts/${cleanSlug}`, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     if (res.ok) {
       return await res.json();
@@ -52,7 +52,7 @@ export async function incrementViews(postId: number): Promise<void> {
 export async function getComments(postId: number): Promise<Comment[]> {
   try {
     const res = await fetch(`${API_BASE}/api/comments?post_id=${postId}`, {
-      cache: 'no-store',
+      next: { revalidate: 30 },
     });
     if (res.ok) {
       return await res.json();
@@ -95,7 +95,7 @@ export async function addSubscriber(email: string): Promise<boolean> {
 export async function getSettings(): Promise<Record<string, string>> {
   try {
     const res = await fetch(`${API_BASE}/api/settings`, {
-      cache: 'no-store',
+      next: { revalidate: 300 },
     });
     if (res.ok) {
       return await res.json();
