@@ -1,7 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import parse from 'html-react-parser';
 import { getPostBySlug, getComments, getPosts, getSettings } from '@/lib/db';
 import { categoryToSlug } from '@/lib/utils';
 import CommentSection from '@/components/CommentSection';
@@ -182,9 +181,10 @@ export default async function SlugPage({ params }: SlugPageProps) {
             </header>
 
             {/* Article Content */}
-            <div className="article-body article-content">
-              {parse(post.content)}
-            </div>
+            <div
+              className="article-body article-content"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
 
             {/* Tags Section */}
             {tagsList.length > 0 && (

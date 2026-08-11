@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'rrb-secret-key-2026';
 
 export async function POST(request: Request) {
   try {
@@ -11,8 +8,9 @@ export async function POST(request: Request) {
 
     // Default admin creds from original PHP setup: admin / Admin@12345
     if (username === 'admin' && (password === 'Admin@12345' || password === 'admin')) {
-      const token = jwt.sign({ username: 'admin', role: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
-      
+      const payload = JSON.stringify({ username: 'admin', role: 'admin', exp: Date.now() + 7 * 24 * 3600 * 1000 });
+      const token = typeof btoa !== 'undefined' ? btoa(payload) : Buffer.from(payload).toString('base64');
+
       const response = NextResponse.json({ success: true, message: 'Authenticated successfully' });
       response.cookies.set('admin_token', token, {
         httpOnly: true,
