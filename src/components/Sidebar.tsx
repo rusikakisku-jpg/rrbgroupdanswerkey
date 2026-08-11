@@ -17,6 +17,7 @@ interface SidebarProps {
   popularPosts?: Post[];
   categories?: CategoryItem[];
   showAds?: boolean;
+  hiddenCategories?: string; // comma-separated e.g. "Answer Key, Admit Card, Result"
 }
 
 export default function Sidebar({
@@ -30,9 +31,18 @@ export default function Sidebar({
     { category: 'Syllabus', count: 2 },
   ],
   showAds = false,
+  hiddenCategories = '',
 }: SidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
+
+  // Parse hidden categories from settings and filter them out
+  const hiddenList = hiddenCategories
+    ? hiddenCategories.split(',').map((c) => c.trim().toLowerCase())
+    : [];
+  const visibleCategories = categories.filter(
+    (cat) => !hiddenList.includes(cat.category.toLowerCase())
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,7 +173,7 @@ export default function Sidebar({
       <div className="widget widget-categories">
         <h3 className="widget-title">Categories</h3>
         <ul className="cat-list">
-          {categories.map((cat) => (
+          {visibleCategories.map((cat) => (
             <li key={cat.category} className="cat-item">
               <Link href={`/${categoryToSlug(cat.category)}`} className="cat-link">
                 <span>{cat.category}</span>

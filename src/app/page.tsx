@@ -67,6 +67,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           popularPosts={popularPosts}
           categories={categories}
           showAds={showAds}
+          hiddenCategories={settings.hidden_categories || ''}
         />
 
       </div>

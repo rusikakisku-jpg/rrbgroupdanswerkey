@@ -5,22 +5,42 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
+interface MenuItem {
+  title: string;
+  url: string;
+}
+
 interface HeaderProps {
   siteTitle?: string;
   siteTagline?: string;
   siteLogo?: string;
   showAds?: boolean;
+  menuItems?: MenuItem[];
 }
+
+// Default fallback menu (used only if settings not available)
+const DEFAULT_MENU: MenuItem[] = [
+  { title: 'Home', url: '/' },
+  { title: 'Notification', url: '/notification' },
+  { title: 'Answer Key', url: '/answer-key' },
+  { title: 'Admit Card', url: '/admit-card' },
+  { title: 'Result', url: '/result' },
+  { title: 'Syllabus', url: '/syllabus' },
+];
 
 export default function Header({
   siteTitle = 'RRB Group D Answer Key',
   siteTagline = 'Notification,Answer key,Result',
   siteLogo = 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
   showAds = false,
+  menuItems,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  // Use settings-driven menu or fallback to defaults
+  const navItems = menuItems && menuItems.length > 0 ? menuItems : DEFAULT_MENU;
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -37,15 +57,6 @@ export default function Header({
     }
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen, mounted]);
-
-  const menuItems = [
-    { title: 'Home', url: '/' },
-    { title: 'Notification', url: '/notification' },
-    { title: 'Answer Key', url: '/answer-key' },
-    { title: 'Admit Card', url: '/admit-card' },
-    { title: 'Result', url: '/result' },
-    { title: 'Syllabus', url: '/syllabus' },
-  ];
 
   return (
     <>
@@ -77,7 +88,7 @@ export default function Header({
           {/* Main Navigation (Desktop) */}
           <nav className="main-navigation">
             <ul className="nav-menu" id="nav-menu">
-              {menuItems.map((item) => {
+              {navItems.map((item) => {
                 const isActive =
                   item.url === '/'
                     ? pathname === '/'
@@ -152,7 +163,7 @@ export default function Header({
           </button>
         </div>
         <ul className="hm-mobile-sidebar-menu">
-          {menuItems.map((item) => {
+          {navItems.map((item) => {
             const isActive =
               item.url === '/'
                 ? pathname === '/'

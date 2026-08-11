@@ -260,6 +260,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
           popularPosts={popularPosts}
           categories={categories}
           showAds={showAds}
+          hiddenCategories={settings.hidden_categories || ''}
         />
 
       </div>
