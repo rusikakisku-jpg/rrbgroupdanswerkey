@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface HeaderProps {
   siteTitle?: string;
@@ -19,7 +19,24 @@ export default function Header({
   showAds = false,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (!mounted) return;
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen, mounted]);
 
   const menuItems = [
     { title: 'Home', url: '/' },
@@ -34,7 +51,7 @@ export default function Header({
     <>
       <header className="site-header">
         <div className="container header-inner">
-          
+
           {/* Site Branding */}
           <div className="site-branding-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {siteLogo && (
@@ -57,14 +74,14 @@ export default function Header({
             </div>
           </div>
 
-          {/* Main Navigation */}
+          {/* Main Navigation (Desktop) */}
           <nav className="main-navigation">
             <ul className="nav-menu" id="nav-menu">
               {menuItems.map((item) => {
                 const isActive =
                   item.url === '/'
                     ? pathname === '/'
-                    : pathname.toLowerCase() === item.url.toLowerCase();
+                    : pathname.toLowerCase().startsWith(item.url.toLowerCase());
                 return (
                   <li key={item.title} className="nav-item">
                     <Link
@@ -79,15 +96,19 @@ export default function Header({
             </ul>
           </nav>
 
-          {/* Header Gadgets / Mobile Toggle */}
+          {/* Mobile Toggle Button */}
           <div className="header-gadgets">
             <button
               className="hm-mobile-menu-toggle"
               id="nav-toggle"
               aria-label="Toggle navigation"
+              aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(!mobileOpen)}
             >
-              <Menu style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+              {mobileOpen
+                ? <X style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+                : <Menu style={{ width: '24px', height: '24px', color: '#ffffff' }} />
+              }
             </button>
           </div>
 
@@ -106,48 +127,50 @@ export default function Header({
         </div>
       )}
 
+      {/* Mobile Overlay */}
+      <div
+        className={`hm-overlay-mask${mobileOpen ? ' active' : ''}`}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+      />
+
       {/* Mobile Drawer Sidebar */}
-      {mobileOpen && (
-        <>
-          <div
-            className="hm-overlay-mask active"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="hm-drawer-panel active">
-            <div className="hm-drawer-header">
-              <span className="hm-drawer-title">{siteTitle}</span>
-              <button
-                className="hm-drawer-close"
-                aria-label="Close menu"
-                onClick={() => setMobileOpen(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <div className="hm-drawer-body">
-              <ul className="hm-mobile-nav">
-                {menuItems.map((item) => {
-                  const isActive =
-                    item.url === '/'
-                      ? pathname === '/'
-                      : pathname.toLowerCase() === item.url.toLowerCase();
-                  return (
-                    <li key={item.title}>
-                      <Link
-                        href={item.url}
-                        className={isActive ? 'active' : ''}
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+      <div className={`hm-mobile-sidebar${mobileOpen ? ' active' : ''}`} role="dialog" aria-label="Navigation menu">
+        <div className="hm-mobile-sidebar-header">
+          <div className="hm-mobile-sidebar-brand">
+            {siteLogo && (
+              <img src={siteLogo} alt={siteTitle} style={{ height: '36px', width: 'auto' }} />
+            )}
+            <span className="hm-mobile-sidebar-title">{siteTitle}</span>
           </div>
-        </>
-      )}
+          <button
+            className="hm-mobile-sidebar-close"
+            aria-label="Close menu"
+            onClick={() => setMobileOpen(false)}
+          >
+            <X style={{ width: '20px', height: '20px' }} />
+          </button>
+        </div>
+        <ul className="hm-mobile-sidebar-menu">
+          {menuItems.map((item) => {
+            const isActive =
+              item.url === '/'
+                ? pathname === '/'
+                : pathname.toLowerCase().startsWith(item.url.toLowerCase());
+            return (
+              <li key={item.title}>
+                <Link
+                  href={item.url}
+                  className={isActive ? 'active' : ''}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.title}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </>
   );
 }
