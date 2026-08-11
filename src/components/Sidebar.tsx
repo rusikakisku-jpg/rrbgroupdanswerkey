@@ -23,13 +23,7 @@ interface SidebarProps {
 export default function Sidebar({
   recentPosts = [],
   popularPosts = [],
-  categories = [
-    { category: 'Notification', count: 4 },
-    { category: 'Answer Key', count: 0 },
-    { category: 'Admit Card', count: 0 },
-    { category: 'Result', count: 0 },
-    { category: 'Syllabus', count: 2 },
-  ],
+  categories = [],
   showAds = false,
   hiddenCategories = '',
 }: SidebarProps) {
@@ -169,19 +163,21 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Categories Widget */}
-      <div className="widget widget-categories">
-        <h3 className="widget-title">Categories</h3>
-        <ul className="cat-list">
-          {visibleCategories.map((cat) => (
-            <li key={cat.category} className="cat-item">
-              <Link href={`/${categoryToSlug(cat.category)}`} className="cat-link">
-                <span>{cat.category}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Categories Widget — only shown when there are visible categories */}
+      {visibleCategories.length > 0 && (
+        <div className="widget widget-categories">
+          <h3 className="widget-title">Categories</h3>
+          <ul className="cat-list">
+            {visibleCategories.map((cat) => (
+              <li key={cat.category} className="cat-item">
+                <Link href={`/${categoryToSlug(cat.category)}`} className="cat-link">
+                  <span>{cat.category}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
     </aside>
   );

@@ -80,8 +80,14 @@ export default async function SlugPage({ params }: SlugPageProps) {
   const recentPosts = [...allPosts].slice(0, 5);
   const popularPosts = [...allPosts].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
 
-  const categoriesList = ['Notification', 'Answer Key', 'Admit Card', 'Result', 'Syllabus'];
-  const categories = categoriesList.map((cat) => {
+  // Build category list from settings, filter out hidden ones
+  const allCatNames = (settings.site_categories || 'Notification,Answer Key,Admit Card,Result,Syllabus')
+    .split(',').map((c: string) => c.trim()).filter(Boolean);
+  const hiddenCatNames = (settings.hidden_categories || '')
+    .split(',').map((c: string) => c.trim().toLowerCase()).filter(Boolean);
+  const visibleCatList = allCatNames.filter((c: string) => !hiddenCatNames.includes(c.toLowerCase()));
+
+  const categories = visibleCatList.map((cat: string) => {
     const count = allPosts.filter((p) => categoryToSlug(p.category) === categoryToSlug(cat)).length;
     return { category: cat, count };
   });
@@ -89,7 +95,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
   // --------------------------------------------------------------------------
   // CASE 1: ROOT LEVEL CATEGORY PAGE (e.g. /notification, /syllabus)
   // --------------------------------------------------------------------------
-  const isCategory = CATEGORY_MAP[cleanSlug] || categoriesList.some((c) => categoryToSlug(c) === cleanSlug);
+  const isCategory = CATEGORY_MAP[cleanSlug] || allCatNames.some((c: string) => categoryToSlug(c) === cleanSlug);
 
   if (isCategory) {
     const categoryPosts = await getPosts({ category: cleanSlug });
@@ -130,6 +136,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
             popularPosts={popularPosts}
             categories={categories}
             showAds={showAds}
+            hiddenCategories={settings.hidden_categories || ''}
           />
         </div>
       </div>

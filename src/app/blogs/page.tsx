@@ -35,8 +35,14 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
   const recentPosts = [...allPosts].slice(0, 5);
   const popularPosts = [...allPosts].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
 
-  const categoriesList = ['Notification', 'Answer Key', 'Admit Card', 'Result', 'Syllabus'];
-  const categories = categoriesList.map((cat) => {
+  // Build category list from settings, filter out hidden ones
+  const allCatNames = (settings.site_categories || 'Notification,Answer Key,Admit Card,Result,Syllabus')
+    .split(',').map((c: string) => c.trim()).filter(Boolean);
+  const hiddenCatNames = (settings.hidden_categories || '')
+    .split(',').map((c: string) => c.trim().toLowerCase()).filter(Boolean);
+  const visibleCatList = allCatNames.filter((c: string) => !hiddenCatNames.includes(c.toLowerCase()));
+
+  const categories = visibleCatList.map((cat: string) => {
     const count = allPosts.filter((p) => categoryToSlug(p.category) === categoryToSlug(cat)).length;
     return { category: cat, count };
   });
