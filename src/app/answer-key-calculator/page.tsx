@@ -104,40 +104,6 @@ export default function AnswerKeyCalculatorPage() {
     }
   };
 
-  const handleDemoCalculation = () => {
-    const c = 68;
-    const w = 14;
-    const u = 18;
-
-    const pos = c * 1.0;
-    const neg = w * (1 / 3);
-    const net = Math.max(0, pos - neg);
-    const totalAttempted = c + w;
-    const accuracyVal = totalAttempted > 0 ? ((c / totalAttempted) * 100).toFixed(1) + '%' : '0%';
-
-    setResult({
-      correctCount: c,
-      wrongCount: w,
-      unattemptedCount: u,
-      candidateName: 'Verified Candidate',
-      rollNo: '26804' + Math.floor(10000 + Math.random() * 90000),
-      testDate: new Date().toISOString().split('T')[0],
-      testTime: '12:30 PM - 02:00 PM',
-      testCenter: 'iON Digital Zone iDZ TCS Centre',
-      examName: 'RRB CBT Exam 2026',
-      positiveMarks: parseFloat(pos.toFixed(2)),
-      negativeMarks: parseFloat(neg.toFixed(2)),
-      netScore: parseFloat(net.toFixed(2)),
-      accuracy: accuracyVal,
-      sections: [
-        { name: 'General Science', total: 25, correct: 18, wrong: 4, unattempted: 3 },
-        { name: 'Mathematics', total: 25, correct: 17, wrong: 3, unattempted: 5 },
-        { name: 'General Intelligence & Reasoning', total: 30, correct: 22, wrong: 4, unattempted: 4 },
-        { name: 'General Awareness & Current Affairs', total: 20, correct: 11, wrong: 3, unattempted: 6 },
-      ],
-    });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -226,13 +192,16 @@ export default function AnswerKeyCalculatorPage() {
             sections: parsedSections,
           });
         } else {
-          showToast(data?.error || 'Invalid or Expired Answer Key URL. Please check your link.');
+          setResult(null);
+          showToast(data?.error || data?.message || 'Please enter valid Answerkey Url');
         }
       } else {
-        handleDemoCalculation();
+        setResult(null);
+        showToast('Please enter valid Answerkey Url');
       }
     } catch (err) {
-      handleDemoCalculation();
+      setResult(null);
+      showToast('Please enter valid Answerkey Url');
     } finally {
       setLoading(false);
       setBtnText('Calculate Marks & Rank');
