@@ -32,9 +32,43 @@ export default async function RootLayout({
     .filter((item) => item.visible === 1)
     .map((item) => ({ title: item.title, url: item.url }));
 
+  const faviconUrl = settings.site_favicon || 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png';
+  const showAds = settings.ads_status === '1';
+
   return (
     <html lang="en">
       <head>
+        {/* Google Search Console Verification */}
+        {settings.google_search_console && (
+          <meta name="google-site-verification" content={settings.google_search_console} />
+        )}
+
+        {/* Google Analytics 4 (gtag.js) */}
+        {settings.google_analytics && (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${settings.google_analytics}`} />
+            <script
+              id="google-analytics-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${settings.google_analytics}');
+                `,
+              }}
+            />
+          </>
+        )}
+
+        {/* Google AdSense Header Script */}
+        {showAds && settings.google_adsense_header && (
+          <script
+            id="google-adsense-header"
+            dangerouslySetInnerHTML={{ __html: settings.google_adsense_header }}
+          />
+        )}
+
         {/* Speed Optimization: Preconnect & DNS-Prefetch for Fonts & Cloudflare R2 CDN */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -45,7 +79,7 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
-        <link rel="icon" href="https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png" />
+        <link rel="icon" href={faviconUrl} />
       </head>
       <body>
         <Header
@@ -53,6 +87,7 @@ export default async function RootLayout({
           siteTagline={settings.site_tagline}
           siteLogo={settings.site_logo}
           menuItems={visibleMenuItems.length > 0 ? visibleMenuItems : undefined}
+          showAds={showAds}
         />
         <main className="main-content">{children}</main>
         <Footer />

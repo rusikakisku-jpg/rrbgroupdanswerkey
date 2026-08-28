@@ -91,45 +91,56 @@ export default function AnswerKeyCalculatorPage() {
     setBtnText('Fetching Answer Key...');
 
     try {
-      // Fetch response sheet HTML / JSON via proxy API
-      const apiEndpoint = `http://147.93.154.159/api_smart.php?url=${encodeURIComponent(urlVal)}`;
+      // Fetch response sheet data via HTTPS Digialm Calculator API Engine
+      const apiEndpoint = `https://digialm.quickgift.in/?url=${encodeURIComponent(urlVal)}&marks_right=1&marks_wrong=0.3333333333333333`;
       const res = await fetch(apiEndpoint);
       if (res.ok) {
         const data = await res.json();
-        if (data && (data.score_summary || data.candidate_info || data.success)) {
-          const info = data.candidate_info || {};
-          const score = data.score_summary || {};
+        if (data && (data.success || data.score_summary || data.candidate_info || data.data)) {
+          const info = data.candidate_info || data.data?.candidate_info || {};
+          const score = data.score_summary || data.data?.score_summary || {};
 
-          const c = Number(score.correct_answers || score.correct || 62);
-          const w = Number(score.wrong_answers || score.wrong || 14);
-          const u = Number(score.unattempted || 24);
+          const c = Number(score.correct ?? score.correct_answers ?? 0);
+          const w = Number(score.wrong ?? score.wrong_answers ?? 0);
+          const u = Number(score.unattempted ?? 0);
 
-          const pos = c * 1.0;
-          const neg = w * (1 / 3);
-          const net = Math.max(0, pos - neg);
+          const pos = Number(score.positive_marks ?? (c * 1.0));
+          const neg = Number(score.negative_marks ?? (w * (1 / 3)));
+          const net = Number(score.total_marks ?? score.net_score ?? (pos - neg));
+
+          const rawSections = data.sections || data.data?.sections;
+          const parsedSections = Array.isArray(rawSections) && rawSections.length > 0
+            ? rawSections.map((s: any) => ({
+                name: s.name || s.section_name || 'Section',
+                total: Number(s.total || s.total_questions || ((s.correct || 0) + (s.wrong || 0) + (s.unattempted || 0))),
+                correct: Number(s.correct || s.correct_answers || 0),
+                wrong: Number(s.wrong || s.wrong_answers || 0),
+                unattempted: Number(s.unattempted || 0),
+              }))
+            : [
+                { name: 'General Science', total: 25, correct: Math.round(c * 0.25), wrong: Math.round(w * 0.25), unattempted: Math.max(0, 25 - Math.round(c * 0.25) - Math.round(w * 0.25)) },
+                { name: 'Mathematics', total: 25, correct: Math.round(c * 0.25), wrong: Math.round(w * 0.25), unattempted: Math.max(0, 25 - Math.round(c * 0.25) - Math.round(w * 0.25)) },
+                { name: 'General Intelligence & Reasoning', total: 30, correct: Math.round(c * 0.30), wrong: Math.round(w * 0.30), unattempted: Math.max(0, 30 - Math.round(c * 0.30) - Math.round(w * 0.30)) },
+                { name: 'General Awareness & Current Affairs', total: 20, correct: Math.max(0, c - Math.round(c * 0.80)), wrong: Math.max(0, w - Math.round(w * 0.80)), unattempted: Math.max(0, u - Math.round(u * 0.80)) },
+              ];
 
           setResult({
             correctCount: c,
             wrongCount: w,
             unattemptedCount: u,
-            candidateName: info['Participant Name'] || info['Candidate Name'] || 'Verified Candidate',
-            rollNo: info['Roll Number'] || info['Roll No'] || '2680459203',
-            testDate: info['Test Date'] || '2026-08-10',
-            testTime: info['Test Time'] || '12:30 PM - 02:00 PM',
-            testCenter: info['Test Centre Name'] || 'iON Digital Zone',
-            examName: info['Subject'] || 'RRB Group D CBT Exam 2026',
+            candidateName: info['Participant Name'] || info['Candidate Name'] || info.candidate_name || 'Verified Candidate',
+            rollNo: info['Roll Number'] || info['Roll No'] || info.roll_number || '2680459203',
+            testDate: info['Test Date'] || info.test_date || new Date().toISOString().split('T')[0],
+            testTime: info['Test Time'] || info.test_time || '12:30 PM - 02:00 PM',
+            testCenter: info['Test Centre Name'] || info.test_centre || 'iON Digital Zone',
+            examName: info['Subject'] || info.subject || 'RRB Group D CBT Exam 2026',
             positiveMarks: parseFloat(pos.toFixed(2)),
             negativeMarks: parseFloat(neg.toFixed(2)),
             netScore: parseFloat(net.toFixed(2)),
-            sections: [
-              { name: 'General Science', total: 25, correct: Math.round(c * 0.25), wrong: Math.round(w * 0.25), unattempted: Math.round(u * 0.25) },
-              { name: 'Mathematics', total: 25, correct: Math.round(c * 0.25), wrong: Math.round(w * 0.25), unattempted: Math.round(u * 0.25) },
-              { name: 'General Intelligence & Reasoning', total: 30, correct: Math.round(c * 0.30), wrong: Math.round(w * 0.30), unattempted: Math.round(u * 0.30) },
-              { name: 'General Awareness & Current Affairs', total: 20, correct: Math.round(c * 0.20), wrong: Math.round(w * 0.20), unattempted: Math.round(u * 0.20) },
-            ]
+            sections: parsedSections,
           });
         } else {
-          handleDemoCalculation();
+          showToast(data?.error || 'Invalid or Expired Answer Key URL. Please check your link.');
         }
       } else {
         handleDemoCalculation();
