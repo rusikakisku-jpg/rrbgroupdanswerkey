@@ -7,6 +7,11 @@ import { getSettings } from '@/lib/db';
 export const metadata: Metadata = {
   title: 'RRB Group D Answer Key - Notification,Answer key,Result',
   description: 'Official Railway Recruitment Board RRB Group D Answer Key, Cut Off Marks, Question Paper PDF, CBT Syllabus & Result Updates 2026.',
+  icons: {
+    icon: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png',
+    shortcut: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png',
+    apple: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png',
+  },
 };
 
 export default async function RootLayout({
