@@ -23,10 +23,19 @@ import {
   MapPin,
   Calendar,
   Clock,
-  Building2,
   Check,
   TrendingUp,
+  MinusCircle,
+  Percent,
 } from 'lucide-react';
+
+interface SectionData {
+  name: string;
+  total: number;
+  correct: number;
+  wrong: number;
+  unattempted: number;
+}
 
 interface ParseResult {
   correctCount: number;
@@ -42,7 +51,7 @@ interface ParseResult {
   negativeMarks: number;
   netScore: number;
   accuracy?: string;
-  sections: Array<{ name: string; total: number; correct: number; wrong: number; unattempted: number }>;
+  sections: SectionData[];
 }
 
 const RRB_ZONES = [
@@ -141,7 +150,7 @@ export default function AnswerKeyCalculatorPage() {
     if (!/^https?:\/\//i.test(urlVal)) urlVal = 'https://' + urlVal;
 
     setLoading(true);
-    setBtnText('Analyzing Response Sheet...');
+    setBtnText('Evaluating Answer Key...');
 
     try {
       // Fetch response sheet data via HTTPS Digialm Calculator API Engine
@@ -235,77 +244,52 @@ export default function AnswerKeyCalculatorPage() {
               background: '#ffffff',
               borderRadius: '16px',
               border: '1px solid #e2e8f0',
-              boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)',
               overflow: 'hidden',
             }}
           >
             
-            {/* HERO BANNER SECTION */}
+            {/* HERO HEADER SECTION */}
             <div
               style={{
-                background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%)',
-                padding: '36px 32px 32px 32px',
+                background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #1e3a8a 100%)',
+                padding: '36px 32px 30px 32px',
                 color: '#ffffff',
-                position: 'relative',
+                borderBottom: '3px solid #38bdf8',
               }}
             >
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(8px)', borderRadius: '30px', fontSize: '0.825rem', fontWeight: 700, marginBottom: '14px', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
-                <Sparkles style={{ width: '15px', height: '15px', color: '#38bdf8' }} />
-                <span>⚡ AI-Powered Answer Key Engine 2026</span>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 14px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '30px', fontSize: '0.825rem', fontWeight: 700, marginBottom: '12px', color: '#7dd3fc' }}>
+                <Sparkles style={{ width: '14px', height: '14px' }} />
+                <span>AI Answer Key Rank & Marks Evaluator 2026</span>
               </div>
 
-              <h1 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.35rem)', fontWeight: 900, color: '#ffffff', margin: '0 0 10px 0', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
-                RRB Group D Marks & Rank Calculator 2026
+              <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.15rem)', fontWeight: 800, color: '#ffffff', margin: '0 0 8px 0', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
+                RRB Group D Answer Key Marks & Rank Calculator
               </h1>
 
-              <p style={{ color: '#e0f2fe', fontSize: '0.975rem', lineHeight: '1.6', margin: 0, maxWidth: '640px' }}>
-                Paste your official Digialm / TCS iON response sheet URL to get an instant breakdown of your raw score, negative marks (-1/3rd rule), category & zone-wise shift rank.
+              <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', margin: 0, maxWidth: '680px' }}>
+                Paste your official Digialm / TCS response sheet URL below to evaluate your raw marks, positive scores, negative deductions (-1/3rd rule), section-wise performance, and zone rank.
               </p>
-
-              {/* 3-Step Process Indicator */}
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: '12px',
-                  marginTop: '24px',
-                  paddingTop: '20px',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.15)',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#38bdf8', color: '#0f172a', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>1</div>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff' }}>Paste Digialm URL</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#38bdf8', color: '#0f172a', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>2</div>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff' }}>Select Zone & Category</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#38bdf8', color: '#0f172a', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>3</div>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff' }}>Instant Score & Rank</span>
-                </div>
-              </div>
             </div>
 
-            <div style={{ padding: '32px' }}>
+            <div style={{ padding: '30px' }}>
+              
               {/* Toast Notification */}
               {toastMsg && (
-                <div style={{ padding: '14px 18px', background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', borderRadius: '10px', fontSize: '0.9rem', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 600 }}>
-                  <AlertCircle style={{ width: '20px', height: '20px', flexShrink: 0 }} />
+                <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', borderRadius: '8px', fontSize: '0.9rem', marginBottom: '22px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
+                  <AlertCircle style={{ width: '18px', height: '18px', flexShrink: 0 }} />
                   <span>{toastMsg}</span>
                 </div>
               )}
 
               {/* Calculator Form */}
-              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '22px' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '20px' }}>
                 
-                {/* Answer Key URL Input with Paste Shortcut */}
-                <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
-                    <label style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.975rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span>Paste Answer Key URL (Digialm Response Sheet):</span>
-                      <span style={{ color: '#ef4444' }}>*</span>
+                {/* Answer Key URL Input */}
+                <div style={{ background: '#f8fafc', padding: '18px 20px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                    <label style={{ fontWeight: 700, color: '#1e293b', fontSize: '0.95rem' }}>
+                      Answer Key URL (Digialm Link) <span style={{ color: '#ef4444' }}>*</span>
                     </label>
                     <button
                       type="button"
@@ -314,18 +298,17 @@ export default function AnswerKeyCalculatorPage() {
                         background: '#ffffff',
                         border: '1px solid #cbd5e1',
                         color: '#0284c7',
-                        padding: '5px 12px',
+                        padding: '4px 10px',
                         borderRadius: '6px',
-                        fontSize: '0.8rem',
+                        fontSize: '0.78rem',
                         fontWeight: 700,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '5px',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                        gap: '4px',
                       }}
                     >
-                      {copied ? <Check style={{ width: '13px', height: '13px', color: '#16a34a' }} /> : <Clipboard style={{ width: '13px', height: '13px' }} />}
+                      {copied ? <Check style={{ width: '12px', height: '12px', color: '#16a34a' }} /> : <Clipboard style={{ width: '12px', height: '12px' }} />}
                       {copied ? 'Pasted!' : 'Paste from Clipboard'}
                     </button>
                   </div>
@@ -337,21 +320,19 @@ export default function AnswerKeyCalculatorPage() {
                     onChange={(e) => setAnsKeyUrl(e.target.value)}
                     style={{
                       width: '100%',
-                      padding: '14px 16px',
+                      padding: '13px 15px',
                       borderRadius: '8px',
                       border: '1.5px solid #cbd5e1',
                       fontSize: '0.95rem',
                       background: '#ffffff',
                       color: '#0f172a',
                       boxSizing: 'border-box',
-                      transition: 'border-color 0.2s',
                     }}
                     required
                   />
 
-                  {/* Guide Toggle */}
-                  <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                    <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                  <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
                       Example: Digialm response sheet URL ending with <code>.html</code>
                     </span>
                     <button
@@ -361,45 +342,43 @@ export default function AnswerKeyCalculatorPage() {
                         background: 'transparent',
                         border: 'none',
                         color: '#0284c7',
-                        fontSize: '0.825rem',
+                        fontSize: '0.8rem',
                         fontWeight: 600,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '4px',
+                        gap: '3px',
                         padding: 0,
                       }}
                     >
-                      <HelpCircle style={{ width: '14px', height: '14px' }} />
-                      How to get Digialm URL?
-                      {showGuide ? <ChevronUp style={{ width: '14px', height: '14px' }} /> : <ChevronDown style={{ width: '14px', height: '14px' }} />}
+                      <HelpCircle style={{ width: '13px', height: '13px' }} />
+                      How to get URL?
+                      {showGuide ? <ChevronUp style={{ width: '13px', height: '13px' }} /> : <ChevronDown style={{ width: '13px', height: '13px' }} />}
                     </button>
                   </div>
 
-                  {/* Accordion Guide */}
                   {showGuide && (
-                    <div style={{ marginTop: '14px', padding: '14px 16px', background: '#eff6ff', borderRadius: '8px', border: '1px solid #bfdbfe', fontSize: '0.85rem', color: '#1e40af', lineHeight: 1.6 }}>
-                      <strong>📱 How to copy Answer Key URL in Mobile / Chrome:</strong>
-                      <ol style={{ margin: '8px 0 0 16px', padding: 0 }}>
-                        <li>Login to the official RRB Candidate Response portal.</li>
-                        <li>Click on <em>"Candidate Response / Click here to generate response sheet"</em>.</li>
-                        <li>Copy the URL from your browser address bar (it starts with <code>https://cdn.digialm.com/...</code>).</li>
-                        <li>Paste the copied link in the box above and click Calculate.</li>
+                    <div style={{ marginTop: '12px', padding: '12px 14px', background: '#eff6ff', borderRadius: '8px', border: '1px solid #bfdbfe', fontSize: '0.825rem', color: '#1e40af', lineHeight: 1.5 }}>
+                      <strong>📱 Quick Instructions:</strong>
+                      <ol style={{ margin: '6px 0 0 16px', padding: 0 }}>
+                        <li>Open your RRB Candidate Login page and click on <em>"Candidate Response Sheet"</em>.</li>
+                        <li>Copy the URL from your browser address bar (starts with <code>https://cdn.digialm.com/...</code>).</li>
+                        <li>Paste the link in the box above and click Calculate.</li>
                       </ol>
                     </div>
                   )}
                 </div>
 
-                {/* Category, Gender, Zone Selections Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                {/* Category, Gender, Zone Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, color: '#334155', marginBottom: '8px', fontSize: '0.9rem' }}>
+                    <label style={{ display: 'block', fontWeight: 600, color: '#334155', marginBottom: '6px', fontSize: '0.875rem' }}>
                       Category: <span style={{ color: '#ef4444' }}>*</span>
                     </label>
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.925rem', background: '#ffffff', color: '#0f172a', fontWeight: 600 }}
+                      style={{ width: '100%', padding: '11px 13px', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.9rem', background: '#ffffff', color: '#0f172a', fontWeight: 600 }}
                     >
                       {CATEGORIES.map((cat) => (
                         <option key={cat} value={cat}>{cat}</option>
@@ -408,13 +387,13 @@ export default function AnswerKeyCalculatorPage() {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, color: '#334155', marginBottom: '8px', fontSize: '0.9rem' }}>
+                    <label style={{ display: 'block', fontWeight: 600, color: '#334155', marginBottom: '6px', fontSize: '0.875rem' }}>
                       Gender: <span style={{ color: '#ef4444' }}>*</span>
                     </label>
                     <select
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
-                      style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.925rem', background: '#ffffff', color: '#0f172a', fontWeight: 600 }}
+                      style={{ width: '100%', padding: '11px 13px', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.9rem', background: '#ffffff', color: '#0f172a', fontWeight: 600 }}
                     >
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -423,13 +402,13 @@ export default function AnswerKeyCalculatorPage() {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, color: '#334155', marginBottom: '8px', fontSize: '0.9rem' }}>
+                    <label style={{ display: 'block', fontWeight: 600, color: '#334155', marginBottom: '6px', fontSize: '0.875rem' }}>
                       RRB Zone: <span style={{ color: '#ef4444' }}>*</span>
                     </label>
                     <select
                       value={zone}
                       onChange={(e) => setZone(e.target.value)}
-                      style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.925rem', background: '#ffffff', color: '#0f172a', fontWeight: 600 }}
+                      style={{ width: '100%', padding: '11px 13px', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.9rem', background: '#ffffff', color: '#0f172a', fontWeight: 600 }}
                     >
                       {RRB_ZONES.map((z) => (
                         <option key={z} value={z}>{z}</option>
@@ -438,21 +417,21 @@ export default function AnswerKeyCalculatorPage() {
                   </div>
                 </div>
 
-                {/* Consent Checkbox */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '2px' }}>
+                {/* Consent */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
                   <input
                     type="checkbox"
                     id="consent"
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
-                    style={{ width: '18px', height: '18px', accentColor: '#0284c7', cursor: 'pointer', marginTop: '2px' }}
+                    style={{ width: '16px', height: '16px', accentColor: '#0284c7', cursor: 'pointer' }}
                   />
-                  <label htmlFor="consent" style={{ fontSize: '0.875rem', color: '#475569', cursor: 'pointer', lineHeight: 1.5 }}>
-                    I agree to submit my response sheet URL to compute exact raw score, section accuracy, and shift percentile rank.
+                  <label htmlFor="consent" style={{ fontSize: '0.85rem', color: '#475569', cursor: 'pointer' }}>
+                    I agree to calculate score and rank analytics adhering to official RRB CBT rules (+1, -1/3 penalty).
                   </label>
                 </div>
 
-                {/* Calculate Button */}
+                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -462,43 +441,41 @@ export default function AnswerKeyCalculatorPage() {
                     justifyContent: 'center',
                     gap: '10px',
                     width: '100%',
-                    padding: '16px',
+                    padding: '15px',
                     background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
                     color: '#ffffff',
-                    fontSize: '1.05rem',
+                    fontSize: '1.025rem',
                     fontWeight: 800,
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     border: 'none',
                     cursor: loading ? 'not-allowed' : 'pointer',
-                    boxShadow: '0 8px 20px -4px rgba(2, 132, 199, 0.4)',
+                    boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
                     transition: 'all 0.2s ease',
-                    marginTop: '6px',
                   }}
                 >
-                  <Award style={{ width: '22px', height: '22px' }} />
+                  <Award style={{ width: '20px', height: '20px' }} />
                   {btnText}
                   <ArrowRight style={{ width: '18px', height: '18px' }} />
                 </button>
 
               </form>
 
-              {/* ULTRA-MODERN SCORECARD RESULTS */}
+              {/* UNIFIED SCORECARD & SECTION PERFORMANCE BREAKDOWN */}
               {result && (
-                <div id="printable-scorecard" style={{ marginTop: '40px', paddingTop: '32px', borderTop: '2px dashed #cbd5e1' }}>
+                <div id="printable-scorecard" style={{ marginTop: '36px', paddingTop: '28px', borderTop: '2px dashed #cbd5e1' }}>
                   
-                  {/* Scorecard Header Banner */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
-                    <div>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#059669', background: '#ecfdf5', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 700, marginBottom: '6px' }}>
-                        <CheckCircle2 style={{ width: '14px', height: '14px' }} /> Verified Response Sheet Evaluated
-                      </div>
-                      <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                        Candidate Performance Scorecard
+                  {/* Top Bar with Print & Reset */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#059669', background: '#ecfdf5', padding: '4px 10px', borderRadius: '16px', fontSize: '0.78rem', fontWeight: 800 }}>
+                        <CheckCircle2 style={{ width: '14px', height: '14px' }} /> Verified Response Sheet
+                      </span>
+                      <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                        Official Scorecard Report
                       </h2>
                     </div>
 
-                    {/* Action Buttons: Print & Reset */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <button
                         type="button"
                         onClick={handlePrintScorecard}
@@ -506,17 +483,17 @@ export default function AnswerKeyCalculatorPage() {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '6px',
-                          padding: '8px 16px',
+                          padding: '7px 14px',
                           background: '#f1f5f9',
                           border: '1px solid #cbd5e1',
-                          borderRadius: '8px',
+                          borderRadius: '6px',
                           color: '#334155',
-                          fontSize: '0.85rem',
+                          fontSize: '0.825rem',
                           fontWeight: 700,
                           cursor: 'pointer',
                         }}
                       >
-                        <Printer style={{ width: '15px', height: '15px' }} /> Print Scorecard
+                        <Printer style={{ width: '14px', height: '14px' }} /> Print / PDF
                       </button>
                       <button
                         type="button"
@@ -525,210 +502,177 @@ export default function AnswerKeyCalculatorPage() {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '6px',
-                          padding: '8px 16px',
-                          background: '#f8fafc',
-                          border: '1px solid #cbd5e1',
-                          borderRadius: '8px',
+                          padding: '7px 14px',
+                          background: '#eff6ff',
+                          border: '1px solid #bfdbfe',
+                          borderRadius: '6px',
                           color: '#0284c7',
-                          fontSize: '0.85rem',
+                          fontSize: '0.825rem',
                           fontWeight: 700,
                           cursor: 'pointer',
                         }}
                       >
-                        <RefreshCw style={{ width: '15px', height: '15px' }} /> Check Another
+                        <RefreshCw style={{ width: '14px', height: '14px' }} /> Check Another
                       </button>
                     </div>
                   </div>
 
-                  {/* Candidate Info Profile Card */}
+                  {/* Candidate Details Summary Box */}
                   <div
                     style={{
                       background: '#f8fafc',
-                      padding: '24px',
-                      borderRadius: '14px',
+                      padding: '20px',
+                      borderRadius: '12px',
                       border: '1px solid #e2e8f0',
                       marginBottom: '24px',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '18px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.2rem' }}>
-                          <User style={{ width: '24px', height: '24px' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '14px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: '#0284c7', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <User style={{ width: '20px', height: '20px' }} />
                         </div>
                         <div>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: '0 0 2px 0' }}>
+                          <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
                             {result.candidateName}
                           </h3>
-                          <span style={{ fontSize: '0.875rem', color: '#64748b', fontWeight: 600 }}>
+                          <span style={{ fontSize: '0.825rem', color: '#64748b' }}>
                             Roll No: <strong style={{ color: '#0f172a' }}>{result.rollNo}</strong>
                           </span>
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ padding: '6px 14px', background: '#eff6ff', color: '#1d4ed8', borderRadius: '20px', fontSize: '0.825rem', fontWeight: 800, border: '1px solid #bfdbfe' }}>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        <span style={{ padding: '5px 12px', background: '#eff6ff', color: '#1d4ed8', borderRadius: '16px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid #bfdbfe' }}>
                           {zone}
                         </span>
-                        <span style={{ padding: '6px 14px', background: '#fef3c7', color: '#92400e', borderRadius: '20px', fontSize: '0.825rem', fontWeight: 800, border: '1px solid #fde68a' }}>
+                        <span style={{ padding: '5px 12px', background: '#fef3c7', color: '#92400e', borderRadius: '16px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid #fde68a' }}>
                           {category.split(' ')[0]}
                         </span>
                       </div>
                     </div>
 
-                    {/* Metadata Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', fontSize: '0.875rem', color: '#475569' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Award style={{ width: '16px', height: '16px', color: '#0284c7' }} />
-                        <span><strong>Exam:</strong> {result.examName}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Calendar style={{ width: '16px', height: '16px', color: '#0284c7' }} />
-                        <span><strong>Date:</strong> {result.testDate}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Clock style={{ width: '16px', height: '16px', color: '#0284c7' }} />
-                        <span><strong>Time:</strong> {result.testTime}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <MapPin style={{ width: '16px', height: '16px', color: '#0284c7' }} />
-                        <span><strong>Center:</strong> {result.testCenter}</span>
-                      </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', fontSize: '0.85rem', color: '#475569' }}>
+                      <div><strong>Subject:</strong> {result.examName}</div>
+                      <div><strong>Test Date:</strong> {result.testDate}</div>
+                      <div><strong>Test Time:</strong> {result.testTime}</div>
+                      <div><strong>Centre:</strong> {result.testCenter}</div>
                     </div>
                   </div>
 
-                  {/* HERO SCORE METRIC BANNER */}
-                  <div
-                    style={{
-                      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-                      borderRadius: '16px',
-                      padding: '28px 32px',
-                      color: '#ffffff',
-                      marginBottom: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      gap: '20px',
-                      border: '2px solid #38bdf8',
-                      boxShadow: '0 12px 28px -6px rgba(15, 23, 42, 0.3)',
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '0.9rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '4px' }}>
-                        Official Raw Score
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                        <span style={{ fontSize: 'clamp(2.5rem, 6vw, 3.5rem)', fontWeight: 900, color: '#38bdf8', lineHeight: 1 }}>
-                          {result.netScore}
-                        </span>
-                        <span style={{ fontSize: '1.2rem', color: '#94a3b8', fontWeight: 700 }}>
-                          / 100
-                        </span>
-                      </div>
-                      <p style={{ margin: '6px 0 0 0', color: '#cbd5e1', fontSize: '0.85rem' }}>
-                        Calculation formula: (+1 × Correct) - (0.333 × Wrong)
-                      </p>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-                      {result.accuracy && (
-                        <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(6px)', padding: '14px 20px', borderRadius: '12px', textAlign: 'center', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
-                          <div style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 700 }}>Accuracy Rate</div>
-                          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', marginTop: '2px' }}>{result.accuracy}</div>
-                        </div>
-                      )}
-                      <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(6px)', padding: '14px 20px', borderRadius: '12px', textAlign: 'center', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
-                        <div style={{ fontSize: '0.8rem', color: '#4ade80', fontWeight: 700 }}>Attempted Rate</div>
-                        <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', marginTop: '2px' }}>
-                          {result.correctCount + result.wrongCount}%
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 4 Score Metric Cards */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-                    
-                    <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <TrendingUp style={{ width: '16px', height: '16px', color: '#0284c7' }} /> Total Attempted
-                      </div>
-                      <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#0f172a', marginTop: '6px' }}>
-                        {result.correctCount + result.wrongCount} <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 600 }}>/ 100</span>
-                      </div>
-                    </div>
-
-                    <div style={{ background: '#f0fdf4', padding: '20px', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
-                      <div style={{ color: '#166534', fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <CheckCircle2 style={{ width: '16px', height: '16px', color: '#16a34a' }} /> Correct (+1.0)
-                      </div>
-                      <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#15803d', marginTop: '6px' }}>
-                        +{result.positiveMarks} <span style={{ fontSize: '0.9rem', color: '#166534', fontWeight: 700 }}>({result.correctCount})</span>
-                      </div>
-                    </div>
-
-                    <div style={{ background: '#fef2f2', padding: '20px', borderRadius: '12px', border: '1px solid #fecaca' }}>
-                      <div style={{ color: '#991b1b', fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <XCircle style={{ width: '16px', height: '16px', color: '#dc2626' }} /> Wrong (-1/3)
-                      </div>
-                      <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#dc2626', marginTop: '6px' }}>
-                        -{result.negativeMarks} <span style={{ fontSize: '0.9rem', color: '#991b1b', fontWeight: 700 }}>({result.wrongCount})</span>
-                      </div>
-                    </div>
-
-                    <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #cbd5e1' }}>
-                      <div style={{ color: '#475569', fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <FileText style={{ width: '16px', height: '16px', color: '#64748b' }} /> Unattempted
-                      </div>
-                      <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#475569', marginTop: '6px' }}>
-                        {result.unattemptedCount}
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Section-wise Performance Breakdown */}
-                  {result.sections.length > 0 && (
-                    <div style={{ marginBottom: '28px' }}>
-                      <h4 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <FileText style={{ width: '20px', height: '20px', color: '#0284c7' }} /> Section-Wise Performance Breakdown
+                  {/* COMPREHENSIVE SECTION-WISE PERFORMANCE BREAKDOWN WITH UNIFIED TOTALS */}
+                  <div style={{ marginBottom: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <FileText style={{ width: '18px', height: '18px', color: '#0284c7' }} />
+                        Section-Wise Performance Breakdown & Total Summary
                       </h4>
+                      {result.accuracy && (
+                        <span style={{ fontSize: '0.825rem', fontWeight: 700, color: '#0369a1', background: '#e0f2fe', padding: '4px 10px', borderRadius: '12px' }}>
+                          Accuracy: {result.accuracy}
+                        </span>
+                      )}
+                    </div>
 
-                      <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid #cbd5e1' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
-                          <thead>
-                            <tr style={{ background: '#f8fafc', borderBottom: '1px solid #cbd5e1', color: '#334155' }}>
-                              <th style={{ padding: '14px 18px', fontWeight: 800 }}>Section Name</th>
-                              <th style={{ padding: '14px 18px', fontWeight: 800 }}>Total Questions</th>
-                              <th style={{ padding: '14px 18px', fontWeight: 800, color: '#15803d' }}>Correct (+1)</th>
-                              <th style={{ padding: '14px 18px', fontWeight: 800, color: '#dc2626' }}>Wrong (-0.33)</th>
-                              <th style={{ padding: '14px 18px', fontWeight: 800, color: '#64748b' }}>Unattempted</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {result.sections.map((sec, idx) => (
-                              <tr key={idx} style={{ borderBottom: idx < result.sections.length - 1 ? '1px solid #e2e8f0' : 'none', background: idx % 2 === 0 ? '#ffffff' : '#fcfcfc' }}>
-                                <td style={{ padding: '14px 18px', fontWeight: 700, color: '#0f172a' }}>{sec.name}</td>
-                                <td style={{ padding: '14px 18px', fontWeight: 600 }}>{sec.total}</td>
-                                <td style={{ padding: '14px 18px', color: '#15803d', fontWeight: 800 }}>+{sec.correct}</td>
-                                <td style={{ padding: '14px 18px', color: '#dc2626', fontWeight: 800 }}>-{sec.wrong}</td>
-                                <td style={{ padding: '14px 18px', color: '#64748b', fontWeight: 600 }}>{sec.unattempted}</td>
+                    <div style={{ overflowX: 'auto', borderRadius: '10px', border: '1.5px solid #cbd5e1', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
+                        <thead>
+                          <tr style={{ background: '#0f172a', color: '#ffffff' }}>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, borderRight: '1px solid #1e293b' }}>Section Name</th>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, textAlign: 'center' }}>Total Qs</th>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, textAlign: 'center' }}>Attempted</th>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, color: '#4ade80', textAlign: 'center' }}>Correct (+1)</th>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, color: '#f87171', textAlign: 'center' }}>Wrong (-0.33)</th>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, color: '#94a3b8', textAlign: 'center' }}>Unattempted</th>
+                            <th style={{ padding: '12px 14px', fontWeight: 700, color: '#38bdf8', textAlign: 'center' }}>Section Marks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {result.sections.map((sec, idx) => {
+                            const secAttempted = sec.correct + sec.wrong;
+                            const secPos = sec.correct * 1.0;
+                            const secNeg = sec.wrong * (1 / 3);
+                            const secNet = Math.max(0, secPos - secNeg).toFixed(2);
+
+                            return (
+                              <tr
+                                key={idx}
+                                style={{
+                                  borderBottom: '1px solid #e2e8f0',
+                                  background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                                }}
+                              >
+                                <td style={{ padding: '12px 14px', fontWeight: 700, color: '#0f172a', borderRight: '1px solid #e2e8f0' }}>
+                                  {sec.name}
+                                </td>
+                                <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 600, color: '#334155' }}>
+                                  {sec.total}
+                                </td>
+                                <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 600, color: '#0284c7' }}>
+                                  {secAttempted}
+                                </td>
+                                <td style={{ padding: '12px 14px', textAlign: 'center', color: '#15803d', fontWeight: 700 }}>
+                                  +{sec.correct}
+                                </td>
+                                <td style={{ padding: '12px 14px', textAlign: 'center', color: '#dc2626', fontWeight: 700 }}>
+                                  -{sec.wrong}
+                                </td>
+                                <td style={{ padding: '12px 14px', textAlign: 'center', color: '#64748b', fontWeight: 600 }}>
+                                  {sec.unattempted}
+                                </td>
+                                <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 800, color: '#0369a1' }}>
+                                  {secNet}
+                                </td>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
+                            );
+                          })}
+                        </tbody>
 
-                  {/* Share on Social Media */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '14px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Share2 style={{ width: '18px', height: '18px', color: '#0284c7' }} />
-                      <span style={{ fontWeight: 700, color: '#1e293b', fontSize: '0.9rem' }}>Share Score with Friends:</span>
+                        {/* GRAND TOTAL ROW - HIGHLIGHTED AS REQUESTED */}
+                        <tfoot>
+                          <tr
+                            style={{
+                              background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+                              color: '#ffffff',
+                              borderTop: '2px solid #38bdf8',
+                              fontWeight: 800,
+                            }}
+                          >
+                            <td style={{ padding: '14px 14px', fontSize: '0.95rem', color: '#38bdf8', borderRight: '1px solid #334155' }}>
+                              🏆 OVERALL TOTAL
+                            </td>
+                            <td style={{ padding: '14px 14px', textAlign: 'center', fontSize: '0.95rem' }}>
+                              {result.sections.reduce((sum, s) => sum + s.total, 0) || 100}
+                            </td>
+                            <td style={{ padding: '14px 14px', textAlign: 'center', color: '#38bdf8', fontSize: '0.95rem' }}>
+                              {result.correctCount + result.wrongCount}
+                            </td>
+                            <td style={{ padding: '14px 14px', textAlign: 'center', color: '#4ade80', fontSize: '0.95rem' }}>
+                              +{result.correctCount} <span style={{ fontSize: '0.75rem', color: '#86efac' }}>(+{result.positiveMarks})</span>
+                            </td>
+                            <td style={{ padding: '14px 14px', textAlign: 'center', color: '#f87171', fontSize: '0.95rem' }}>
+                              -{result.wrongCount} <span style={{ fontSize: '0.75rem', color: '#fca5a5' }}>(-{result.negativeMarks})</span>
+                            </td>
+                            <td style={{ padding: '14px 14px', textAlign: 'center', color: '#cbd5e1', fontSize: '0.95rem' }}>
+                              {result.unattemptedCount}
+                            </td>
+                            <td style={{ padding: '14px 14px', textAlign: 'center', fontSize: '1.15rem', color: '#38bdf8' }}>
+                              {result.netScore}
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Social Share & Marking Schema Note */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Share2 style={{ width: '16px', height: '16px', color: '#0284c7' }} />
+                      <span style={{ fontWeight: 700, color: '#1e293b', fontSize: '0.85rem' }}>Share Score:</span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
                       <a
                         href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`I scored ${result.netScore} marks in RRB Group D CBT Exam 2026! Calculate your score & rank here: https://rrbgroupdanswerkey.com/answer-key-calculator/`)}`}
                         target="_blank"
@@ -736,14 +680,14 @@ export default function AnswerKeyCalculatorPage() {
                         style={{
                           background: '#25d366',
                           color: '#ffffff',
-                          padding: '8px 16px',
-                          borderRadius: '8px',
-                          fontSize: '0.85rem',
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          fontSize: '0.8rem',
                           fontWeight: 700,
                           textDecoration: 'none',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
+                          gap: '4px',
                         }}
                       >
                         WhatsApp
@@ -755,14 +699,14 @@ export default function AnswerKeyCalculatorPage() {
                         style={{
                           background: '#0088cc',
                           color: '#ffffff',
-                          padding: '8px 16px',
-                          borderRadius: '8px',
-                          fontSize: '0.85rem',
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          fontSize: '0.8rem',
                           fontWeight: 700,
                           textDecoration: 'none',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
+                          gap: '4px',
                         }}
                       >
                         Telegram
@@ -770,9 +714,9 @@ export default function AnswerKeyCalculatorPage() {
                     </div>
                   </div>
 
-                  <div style={{ fontSize: '0.85rem', color: '#475569', background: '#eff6ff', padding: '14px 18px', borderRadius: '10px', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', gap: '10px', marginTop: '20px' }}>
-                    <ShieldCheck style={{ width: '20px', height: '20px', color: '#16a34a', flexShrink: 0 }} />
-                    <span>Your marks calculation adheres strictly to the official Railway Recruitment Board (RRB) CBT marking scheme (+1 mark for correct, -1/3 mark for negative penalty).</span>
+                  <div style={{ fontSize: '0.825rem', color: '#475569', background: '#eff6ff', padding: '12px 16px', borderRadius: '8px', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '16px' }}>
+                    <ShieldCheck style={{ width: '18px', height: '18px', color: '#16a34a', flexShrink: 0 }} />
+                    <span>Scores are computed using the official Railway Recruitment Board marking scheme: +1 for correct answers, -1/3 for wrong answers.</span>
                   </div>
 
                 </div>
