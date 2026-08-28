@@ -242,34 +242,24 @@ export default function AnswerKeyCalculatorPage() {
             style={{
               padding: '0',
               background: '#ffffff',
-              borderRadius: '16px',
+              borderRadius: '12px',
               border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)',
+              boxShadow: '0 2px 12px rgba(0, 0, 0, 0.03)',
               overflow: 'hidden',
             }}
           >
             
-            {/* HERO HEADER SECTION */}
+            {/* CLEAN PAGE HEADER */}
             <div
               style={{
-                background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #1e3a8a 100%)',
-                padding: '36px 32px 30px 32px',
-                color: '#ffffff',
-                borderBottom: '3px solid #38bdf8',
+                padding: '24px 30px',
+                borderBottom: '1px solid #e2e8f0',
+                background: '#ffffff',
               }}
             >
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 14px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '30px', fontSize: '0.825rem', fontWeight: 700, marginBottom: '12px', color: '#7dd3fc' }}>
-                <Sparkles style={{ width: '14px', height: '14px' }} />
-                <span>AI Answer Key Rank & Marks Evaluator 2026</span>
-              </div>
-
-              <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.15rem)', fontWeight: 800, color: '#ffffff', margin: '0 0 8px 0', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.01em' }}>
                 RRB Group D Answer Key Marks & Rank Calculator
               </h1>
-
-              <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', margin: 0, maxWidth: '680px' }}>
-                Paste your official Digialm / TCS response sheet URL below to evaluate your raw marks, positive scores, negative deductions (-1/3rd rule), section-wise performance, and zone rank.
-              </p>
             </div>
 
             <div style={{ padding: '30px' }}>
@@ -727,7 +717,7 @@ export default function AnswerKeyCalculatorPage() {
         </div>
 
         {/* Sidebar */}
-        <Sidebar showAds={false} />
+        <Sidebar showAds={false} showCalcWidget={false} showSearchWidget={false} />
 
       </div>
     </div>

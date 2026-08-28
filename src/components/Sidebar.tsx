@@ -17,6 +17,8 @@ interface SidebarProps {
   popularPosts?: Post[];
   categories?: CategoryItem[];
   showAds?: boolean;
+  showCalcWidget?: boolean;
+  showSearchWidget?: boolean;
   hiddenCategories?: string; // comma-separated e.g. "Answer Key, Admit Card, Result"
 }
 
@@ -25,6 +27,8 @@ export default function Sidebar({
   popularPosts = [],
   categories = [],
   showAds = false,
+  showCalcWidget = true,
+  showSearchWidget = true,
   hiddenCategories = '',
 }: SidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,48 +60,52 @@ export default function Sidebar({
     <aside className="sidebar">
       
       {/* Answer Key Calculator Button Widget (Above Search) */}
-      <div className="widget widget-calc" style={{ marginBottom: '24px' }}>
-        <Link
-          href="/answer-key-calculator"
-          className="calc-btn-link"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            width: '100%',
-            padding: '14px 20px',
-            background: 'linear-gradient(135deg, #0066ff 0%, #0044cc 100%)',
-            color: '#ffffff',
-            fontSize: '0.95rem',
-            fontWeight: 700,
-            borderRadius: '8px',
-            textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(0, 102, 255, 0.25)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <Calculator style={{ width: '20px', height: '20px' }} />
-          Answer Key Calculator
-        </Link>
-      </div>
+      {showCalcWidget && (
+        <div className="widget widget-calc" style={{ marginBottom: '24px' }}>
+          <Link
+            href="/answer-key-calculator"
+            className="calc-btn-link"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              width: '100%',
+              padding: '14px 20px',
+              background: 'linear-gradient(135deg, #0066ff 0%, #0044cc 100%)',
+              color: '#ffffff',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              borderRadius: '8px',
+              textDecoration: 'none',
+              boxShadow: '0 4px 12px rgba(0, 102, 255, 0.25)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <Calculator style={{ width: '20px', height: '20px' }} />
+            Answer Key Calculator
+          </Link>
+        </div>
+      )}
 
       {/* Search Widget */}
-      <div className="widget widget-search">
-        <h3 className="widget-title">Search</h3>
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="search"
-            className="search-input"
-            placeholder="Search articles..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit" className="search-btn" aria-label="Submit Search">
-            <Search style={{ width: '16px', height: '16px' }} />
-          </button>
-        </form>
-      </div>
+      {showSearchWidget && (
+        <div className="widget widget-search">
+          <h3 className="widget-title">Search</h3>
+          <form onSubmit={handleSearch} className="search-form">
+            <input
+              type="search"
+              className="search-input"
+              placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit" className="search-btn" aria-label="Submit Search">
+              <Search style={{ width: '16px', height: '16px' }} />
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Ad Widget 300x250 (Only rendered if showAds is true) */}
       {showAds && (
