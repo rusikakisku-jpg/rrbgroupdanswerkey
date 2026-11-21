@@ -6,7 +6,7 @@ import PostCard from '@/components/PostCard';
 import Sidebar from '@/components/Sidebar';
 import Pagination from '@/components/Pagination';
 
-export const revalidate = 0;
+export const dynamic = 'force-static';
 
 export async function generateStaticParams() {
   return [
@@ -24,17 +24,12 @@ interface CategoryPageProps {
   params: Promise<{
     category: string;
   }>;
-  searchParams: Promise<{
-    page?: string;
-  }>;
 }
 
-export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
   const rawCat = resolvedParams?.category || '';
   const categorySlug = decodeURIComponent(rawCat).trim().toLowerCase();
-  const currentPage = Math.max(1, parseInt(resolvedSearchParams?.page || '1', 10));
 
   const displayTitle = categorySlug
     .split('-')
@@ -42,13 +37,8 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
     .join(' ');
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
-  const title = currentPage > 1
-    ? `${displayTitle} Posts (Page ${currentPage}) | RRB Group D Answer Key`
-    : `${displayTitle} - RRB Group D Answer Key 2026`;
-
-  const canonicalUrl = currentPage > 1
-    ? `${baseUrl}/category/${categorySlug}?page=${currentPage}`
-    : `${baseUrl}/category/${categorySlug}`;
+  const title = `${displayTitle} - RRB Group D Answer Key 2026`;
+  const canonicalUrl = `${baseUrl}/category/${categorySlug}`;
 
   return {
     title,
@@ -80,13 +70,12 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   };
 }
 
-export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
 
   const rawCat = resolvedParams?.category || '';
   const categorySlug = decodeURIComponent(rawCat).trim().toLowerCase();
-  const currentPage = Math.max(1, parseInt(resolvedSearchParams?.page || '1', 10));
+  const currentPage = 1;
   
   const categoryPosts = await getPosts({ category: categorySlug });
   const settings = await getSettings();

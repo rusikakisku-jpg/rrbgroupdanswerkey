@@ -6,16 +6,16 @@ import PostCard from '@/components/PostCard';
 import Sidebar from '@/components/Sidebar';
 import Pagination from '@/components/Pagination';
 
-export const revalidate = 0;
+export const dynamic = 'force-static';
 
 export async function generateStaticParams() {
-  return [
-    { page: '1' },
-    { page: '2' },
-    { page: '3' },
-    { page: '4' },
-    { page: '5' },
-  ];
+  const posts = await getPosts();
+  const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+  const paths = [];
+  for (let i = 1; i <= Math.max(totalPages, 5); i++) {
+    paths.push({ page: String(i) });
+  }
+  return paths;
 }
 
 const POSTS_PER_PAGE = 5;
