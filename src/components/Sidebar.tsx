@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, Calculator } from 'lucide-react';
 import { Post } from '@/lib/types';
-import { categoryToSlug } from '@/lib/utils';
+import { categoryToSlug, getFormattedCoverUrl } from '@/lib/utils';
 
 interface CategoryItem {
   category: string;
@@ -47,13 +47,6 @@ export default function Sidebar({
     if (searchTerm.trim()) {
       router.push(`/blogs?q=${encodeURIComponent(searchTerm.trim())}`);
     }
-  };
-
-  const getCoverUrl = (cover_image?: string | null) => {
-    if (!cover_image) return '/uploads/default-cover.jpg';
-    return cover_image.startsWith('/') || cover_image.startsWith('http')
-      ? cover_image
-      : `/${cover_image}`;
   };
 
   return (
@@ -126,7 +119,7 @@ export default function Sidebar({
               <li key={post.id} className="popular-item">
                 <Link href={`/${post.slug}`} style={{ flexShrink: 0, display: 'block' }}>
                   <img
-                    src={getCoverUrl(post.cover_image)}
+                    src={getFormattedCoverUrl(post.cover_image)}
                     alt={post.title}
                     className="popular-thumb"
                     style={{ width: '80px', height: '55px', objectFit: 'cover', objectPosition: 'center', borderRadius: '6px', display: 'block' }}
@@ -153,7 +146,7 @@ export default function Sidebar({
               <li key={post.id} className="popular-item">
                 <Link href={`/${post.slug}`} style={{ flexShrink: 0, display: 'block' }}>
                   <img
-                    src={getCoverUrl(post.cover_image)}
+                    src={getFormattedCoverUrl(post.cover_image)}
                     alt={post.title}
                     className="popular-thumb"
                     style={{ width: '80px', height: '55px', objectFit: 'cover', objectPosition: 'center', borderRadius: '6px', display: 'block' }}

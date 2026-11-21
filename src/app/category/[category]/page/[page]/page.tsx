@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPosts, getSettings } from '@/lib/db';
 import { categoryToSlug } from '@/lib/utils';
@@ -27,6 +28,36 @@ interface CategoryPaginatedProps {
     category: string;
     page: string;
   }>;
+}
+
+export async function generateMetadata({ params }: CategoryPaginatedProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const rawCat = resolvedParams?.category || '';
+  const categorySlug = decodeURIComponent(rawCat).trim().toLowerCase();
+  const pageNum = parseInt(resolvedParams?.page || '1', 10);
+
+  const displayTitle = categorySlug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
+  const canonicalUrl = `${baseUrl}/category/${categorySlug}/page/${pageNum}`;
+
+  return {
+    title: `${displayTitle} Posts - Page ${pageNum} | RRB Group D Answer Key`,
+    description: `Browse ${displayTitle} updates and notices on Page ${pageNum} for RRB Group D.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${displayTitle} Posts - Page ${pageNum} | RRB Group D Answer Key`,
+      description: `Browse ${displayTitle} updates and notices on Page ${pageNum} for RRB Group D.`,
+      url: canonicalUrl,
+      type: 'website',
+      siteName: 'RRB Group D Answer Key',
+    },
+  };
 }
 
 export default async function CategoryPagePaginated({ params }: CategoryPaginatedProps) {

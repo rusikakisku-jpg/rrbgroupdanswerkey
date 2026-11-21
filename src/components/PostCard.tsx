@@ -4,19 +4,15 @@ import React from 'react';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import { Post } from '@/lib/types';
-import { categoryToSlug } from '@/lib/utils';
+import { categoryToSlug, cleanExcerpt, getFormattedCoverUrl } from '@/lib/utils';
 
 interface PostCardProps {
   post: Post;
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  const coverUrl = post.cover_image
-    ? post.cover_image.startsWith('/') || post.cover_image.startsWith('http')
-      ? post.cover_image
-      : `/${post.cover_image}`
-    : '/uploads/default-cover.jpg';
-
+  const coverUrl = getFormattedCoverUrl(post.cover_image);
+  const excerptText = cleanExcerpt(post.excerpt || post.content, 150);
   const categorySlug = categoryToSlug(post.category);
 
   return (
@@ -61,9 +57,9 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
 
         {/* Excerpt */}
-        {post.excerpt && (
+        {excerptText && (
           <p className="entry-excerpt">
-            {post.excerpt}
+            {excerptText}
           </p>
         )}
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { getPosts, getSettings } from '@/lib/db';
 import { categoryToSlug } from '@/lib/utils';
 import PostCard from '@/components/PostCard';
@@ -26,6 +27,57 @@ interface CategoryPageProps {
   searchParams: Promise<{
     page?: string;
   }>;
+}
+
+export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const rawCat = resolvedParams?.category || '';
+  const categorySlug = decodeURIComponent(rawCat).trim().toLowerCase();
+  const currentPage = Math.max(1, parseInt(resolvedSearchParams?.page || '1', 10));
+
+  const displayTitle = categorySlug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
+  const title = currentPage > 1
+    ? `${displayTitle} Posts (Page ${currentPage}) | RRB Group D Answer Key`
+    : `${displayTitle} - RRB Group D Answer Key 2026`;
+
+  const canonicalUrl = currentPage > 1
+    ? `${baseUrl}/category/${categorySlug}?page=${currentPage}`
+    : `${baseUrl}/category/${categorySlug}`;
+
+  return {
+    title,
+    description: `Browse latest ${displayTitle} updates, official notices, and question paper analysis for RRB Group D.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description: `Browse latest ${displayTitle} updates, official notices, and question paper analysis for RRB Group D.`,
+      url: canonicalUrl,
+      type: 'website',
+      siteName: 'RRB Group D Answer Key',
+      images: [
+        {
+          url: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
+          width: 1200,
+          height: 630,
+          alt: `${displayTitle} - RRB Group D Answer Key`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: `Browse latest ${displayTitle} updates and official notices.`,
+      images: ['https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png'],
+    },
+  };
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {

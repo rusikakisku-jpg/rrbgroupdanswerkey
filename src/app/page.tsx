@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { getPosts, getSettings, categoryToSlug } from '@/lib/db';
 import PostCard from '@/components/PostCard';
 import Sidebar from '@/components/Sidebar';
@@ -12,6 +13,47 @@ interface HomePageProps {
   searchParams: Promise<{
     page?: string;
   }>;
+}
+
+export async function generateMetadata({ searchParams }: HomePageProps): Promise<Metadata> {
+  const resolvedSearchParams = searchParams ? await Promise.resolve(searchParams) : {};
+  const currentPage = Math.max(1, parseInt(resolvedSearchParams?.page || '1', 10));
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
+
+  const title = currentPage > 1
+    ? `RRB Group D Answer Key 2026 - Latest Updates (Page ${currentPage})`
+    : 'RRB Group D Answer Key 2026 - Notification, Answer Key, Cut Off & Result';
+
+  const canonicalUrl = currentPage > 1 ? `${baseUrl}/page/${currentPage}` : baseUrl;
+
+  return {
+    title,
+    description: 'Check official Railway Recruitment Board RRB Group D Answer Key, candidate response sheet link, shift-wise difficulty analysis, raw marks, and category cut off 2026.',
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description: 'Check official Railway Recruitment Board RRB Group D Answer Key, candidate response sheet link, shift-wise difficulty analysis, raw marks, and category cut off 2026.',
+      url: canonicalUrl,
+      type: 'website',
+      siteName: 'RRB Group D Answer Key',
+      images: [
+        {
+          url: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
+          width: 1200,
+          height: 630,
+          alt: 'RRB Group D Answer Key',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: 'Check official Railway Recruitment Board RRB Group D Answer Key, candidate response sheet link, shift-wise difficulty analysis, raw marks, and category cut off 2026.',
+      images: ['https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png'],
+    },
+  };
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {

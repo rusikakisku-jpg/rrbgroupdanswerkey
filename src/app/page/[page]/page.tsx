@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPosts, getSettings, categoryToSlug } from '@/lib/db';
 import PostCard from '@/components/PostCard';
@@ -25,12 +26,25 @@ interface PageRouteProps {
   }>;
 }
 
-export async function generateMetadata({ params }: PageRouteProps) {
+export async function generateMetadata({ params }: PageRouteProps): Promise<Metadata> {
   const resolvedParams = await params;
   const pageNum = parseInt(resolvedParams?.page || '1', 10);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
+  const canonicalUrl = `${baseUrl}/page/${pageNum}`;
+
   return {
-    title: `RRB Group D Answer Key - Page ${pageNum}`,
-    description: `Browse latest posts and exam updates on Page ${pageNum}.`,
+    title: `Latest Exam Updates & Answer Key Analysis - Page ${pageNum} | RRB Group D Answer Key`,
+    description: `Browse latest official Railway Recruitment Board RRB Group D notices, cut-off analysis, and question paper solutions on Page ${pageNum}.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `Latest Exam Updates & Answer Key Analysis - Page ${pageNum} | RRB Group D Answer Key`,
+      description: `Browse latest official Railway Recruitment Board RRB Group D notices, cut-off analysis, and question paper solutions on Page ${pageNum}.`,
+      url: canonicalUrl,
+      type: 'website',
+      siteName: 'RRB Group D Answer Key',
+    },
   };
 }
 

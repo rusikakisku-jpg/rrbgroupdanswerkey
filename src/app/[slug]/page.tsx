@@ -1,8 +1,8 @@
-import React from 'react';
-import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { getPostBySlug, getComments, getPosts, getSettings } from '@/lib/db';
-import { categoryToSlug } from '@/lib/utils';
+import { categoryToSlug, cleanExcerpt, getFormattedCoverUrl, toIsoDate } from '@/lib/utils';
 import CommentSection from '@/components/CommentSection';
 import Sidebar from '@/components/Sidebar';
 import PostCard from '@/components/PostCard';
@@ -40,27 +40,91 @@ const CATEGORY_MAP: Record<string, string> = {
   'syllabus': 'Syllabus',
 };
 
-export async function generateMetadata({ params }: SlugPageProps) {
+export async function generateMetadata({ params }: SlugPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const rawSlug = resolvedParams?.slug || '';
   const cleanSlug = decodeURIComponent(rawSlug).trim().toLowerCase();
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
 
   // Check if it's a category
   if (CATEGORY_MAP[cleanSlug]) {
     const catName = CATEGORY_MAP[cleanSlug];
+    const canonicalUrl = `${baseUrl}/${cleanSlug}`;
+    const title = `${catName} - RRB Group D Answer Key 2026`;
+    const description = `Browse latest ${catName} updates, official notices, and question paper analysis.`;
+
     return {
-      title: `${catName} - RRB Group D Answer Key 2026`,
-      description: `Browse latest ${catName} updates and official notices.`,
+      title,
+      description,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        type: 'website',
+        siteName: 'RRB Group D Answer Key',
+        images: [
+          {
+            url: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
+            width: 1200,
+            height: 630,
+            alt: `${catName} - RRB Group D Answer Key`,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: ['https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png'],
+      },
     };
   }
 
   // Check if it's a single post
   const post = await getPostBySlug(cleanSlug);
-  if (!post) return { title: 'Not Found' };
+  if (!post) {
+    return {
+      title: 'Article Not Found | RRB Group D Answer Key',
+    };
+  }
+
+  const canonicalUrl = `${baseUrl}/${cleanSlug}`;
+  const rawCover = getFormattedCoverUrl(post.cover_image);
+  const coverUrl = rawCover.startsWith('http') ? rawCover : `${baseUrl}${rawCover.startsWith('/') ? '' : '/'}${rawCover}`;
+  const excerpt = cleanExcerpt(post.excerpt || post.content, 160) || post.title;
 
   return {
-    title: `${post.title} - RRB Group D Answer Key`,
-    description: post.excerpt || post.title,
+    title: `${post.title} | RRB Group D Answer Key`,
+    description: excerpt,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: post.title,
+      description: excerpt,
+      url: canonicalUrl,
+      type: 'article',
+      siteName: 'RRB Group D Answer Key',
+      publishedTime: toIsoDate(post.created_at),
+      authors: [post.author_name || 'Admin'],
+      images: [
+        {
+          url: coverUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: excerpt,
+      images: [coverUrl],
+    },
   };
 }
 
@@ -153,18 +217,78 @@ export default async function SlugPage({ params }: SlugPageProps) {
 
   const comments = await getComments(post.id);
 
-  const coverUrl = post.cover_image
-    ? post.cover_image.startsWith('/') || post.cover_image.startsWith('http')
-      ? post.cover_image
-      : `/${post.cover_image}`
-    : '/uploads/default-cover.jpg';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com';
+  const currentUrl = `${baseUrl}/${post.slug}`;
+  const rawCover = getFormattedCoverUrl(post.cover_image);
+  const coverUrl = rawCover.startsWith('http') ? rawCover : `${baseUrl}${rawCover.startsWith('/') ? '' : '/'}${rawCover}`;
 
   const tagsList = post.tags
     ? post.tags.split(',').map((t) => t.trim()).filter(Boolean)
     : [];
 
+  // 1. BlogPosting Schema (Google Rich Results / Discover)
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    'headline': post.title,
+    'description': cleanExcerpt(post.excerpt || post.content, 160) || post.title,
+    'image': coverUrl,
+    'datePublished': toIsoDate(post.created_at),
+    'dateModified': toIsoDate(post.created_at),
+    'author': {
+      '@type': 'Person',
+      'name': post.author_name || 'Admin',
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': settings.site_title || 'RRB Group D Answer Key',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': settings.site_logo || 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
+      },
+    },
+    'mainEntityOfPage': {
+      '@type': 'WebPage',
+      '@id': currentUrl,
+    },
+  };
+
+  // 2. BreadcrumbList Schema
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': baseUrl,
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': post.category || 'Updates',
+        'item': `${baseUrl}/${categoryToSlug(post.category)}`,
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': post.title,
+        'item': currentUrl,
+      },
+    ],
+  };
+
   return (
     <div className="container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="blog-layout">
         
         {/* Main Content Area */}
@@ -235,11 +359,50 @@ export default async function SlugPage({ params }: SlugPageProps) {
               </div>
             )}
 
+            {/* Answer Key Calculator CTA Box */}
+            <div
+              style={{
+                marginTop: '32px',
+                marginBottom: '28px',
+                padding: '24px 20px',
+                background: '#f8fafc',
+                borderRadius: '8px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center',
+              }}
+            >
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
+                Check Your RRB Group D Answer Key Marks &amp; Rank
+              </h3>
+              <p style={{ fontSize: '0.86rem', color: '#64748b', marginBottom: '16px', maxWidth: '520px', marginInline: 'auto' }}>
+                Calculate your raw marks, negative marking deduction, and expected normalized shift score instantly.
+              </p>
+              <Link
+                href="/answer-key-calculator"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '12px 24px',
+                  fontSize: '0.92rem',
+                  fontWeight: 700,
+                  background: 'linear-gradient(135deg, #0066ff 0%, #0044cc 100%)',
+                  color: '#ffffff',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 12px rgba(0, 102, 255, 0.25)',
+                  transition: 'transform 0.15s ease',
+                }}
+              >
+                Open Answer Key Calculator &rarr;
+              </Link>
+            </div>
+
             {/* Share Bar */}
             <div className="share-bar">
               <span className="share-label">Share:</span>
               <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title)}`}
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${post.title} - ${currentUrl}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="share-btn share-wa"
@@ -247,7 +410,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
                 WhatsApp
               </a>
               <a
-                href={`https://t.me/share/url?url=${encodeURIComponent(post.title)}`}
+                href={`https://t.me/share/url?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(post.title)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="share-btn share-tg"

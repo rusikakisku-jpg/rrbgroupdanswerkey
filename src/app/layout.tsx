@@ -5,12 +5,39 @@ import Footer from '@/components/Footer';
 import { getSettings } from '@/lib/db';
 
 export const metadata: Metadata = {
-  title: 'RRB Group D Answer Key - Notification,Answer key,Result',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://rrbgroupdanswerkey.com'),
+  title: {
+    default: 'RRB Group D Answer Key - Notification, Answer Key, Result 2026',
+    template: '%s | RRB Group D Answer Key',
+  },
   description: 'Official Railway Recruitment Board RRB Group D Answer Key, Cut Off Marks, Question Paper PDF, CBT Syllabus & Result Updates 2026.',
+  keywords: ['RRB Group D Answer Key', 'Railway Group D Answer Key', 'RRB Group D Cut Off', 'RRB CBT Answer Key 2026', 'Railway Recruitment Board'],
   icons: {
     icon: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png',
     shortcut: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png',
     apple: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/favicon_1784561384_6a5e3ee8e8ce5.png',
+  },
+  openGraph: {
+    siteName: 'RRB Group D Answer Key',
+    type: 'website',
+    locale: 'en_IN',
+    url: 'https://rrbgroupdanswerkey.com',
+    title: 'RRB Group D Answer Key - Official Updates & Calculator',
+    description: 'Official Railway Recruitment Board RRB Group D Answer Key, Cut Off Marks, Question Paper PDF, CBT Syllabus & Result Updates 2026.',
+    images: [
+      {
+        url: 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
+        width: 1200,
+        height: 630,
+        alt: 'RRB Group D Answer Key',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RRB Group D Answer Key - Official Updates & Calculator',
+    description: 'Official Railway Recruitment Board RRB Group D Answer Key, Cut Off Marks, Question Paper PDF, CBT Syllabus & Result Updates 2026.',
+    images: ['https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png'],
   },
 };
 
@@ -85,6 +112,39 @@ export default async function RootLayout({
           rel="stylesheet"
         />
         <link rel="icon" href={faviconUrl} />
+
+        {/* Global WebSite Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: settings.site_title || 'RRB Group D Answer Key',
+              url: 'https://rrbgroupdanswerkey.com',
+              description: settings.site_tagline || 'Official Railway Recruitment Board RRB Group D Answer Key, Cut Off Marks, CBT Syllabus & Result Updates 2026.',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://rrbgroupdanswerkey.com/blogs?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
+
+        {/* Global Organization Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: settings.site_title || 'RRB Group D Answer Key',
+              url: 'https://rrbgroupdanswerkey.com',
+              logo: settings.site_logo || 'https://rrbgroupdanswerkey.rusikakisku.workers.dev/uploads/logo_1784561384_6a5e3ee8e7bad.png',
+            }),
+          }}
+        />
       </head>
       <body>
         <Header

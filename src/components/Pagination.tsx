@@ -14,6 +14,17 @@ export default function Pagination({ currentPage, totalPages, baseUrl = '' }: Pa
   if (totalPages <= 1) return null;
 
   const getPageUrl = (page: number) => {
+    if (baseUrl.includes('?')) {
+      const [path, query] = baseUrl.split('?');
+      const params = new URLSearchParams(query);
+      if (page === 1) {
+        params.delete('page');
+      } else {
+        params.set('page', String(page));
+      }
+      const qs = params.toString();
+      return qs ? `${path}?${qs}` : path;
+    }
     const cleanBase = baseUrl ? baseUrl.replace(/\/page\/\d+$/, '') : '';
     if (page === 1) {
       return cleanBase || '/';
