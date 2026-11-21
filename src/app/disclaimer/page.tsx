@@ -1,34 +1,100 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
+
+export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer | RRB Group D Answer Key',
-  description: 'Read the disclaimer for RRB Group D Answer Key Portal regarding information accuracy and non-affiliation with official government bodies.',
+  title: 'Disclaimer | RRB Group D Answer Key Portal',
+  description: 'Read the official disclaimer for RRB Group D Answer Key Portal regarding independent educational status, non-affiliation with government authorities, and automated calculations.',
+  alternates: {
+    canonical: 'https://rrbgroupdanswerkey.com/disclaimer',
+  },
+  openGraph: {
+    title: 'Disclaimer | RRB Group D Answer Key Portal',
+    description: 'Read the official disclaimer for RRB Group D Answer Key Portal regarding independent educational status, non-affiliation with government authorities, and automated calculations.',
+    url: 'https://rrbgroupdanswerkey.com/disclaimer',
+    type: 'website',
+  },
 };
 
 export default function DisclaimerPage() {
   return (
-    <div className="container" style={{ marginTop: '30px', marginBottom: '30px' }}>
-      <div className="page-card">
-        <h1 className="page-head-title">Disclaimer</h1>
-        <div className="page-head-bar"></div>
-        <div className="page-content">
-          <p>If you require any more information or have any questions about our site&apos;s disclaimer, please feel free to contact us by email at our <a href="/contact/">Contact Page</a>.</p>
+    <div className="container static-page-wrapper">
+      <div className="static-page-card">
+        <h1 className="static-page-title">Disclaimer</h1>
+        <p className="static-last-updated">Last updated: 01 November 2026</p>
 
-          <h2>Disclaimers for RRB Group D Answer Key Portal</h2>
-          <p>All the information on this website – <a href="https://rrbgroupdanswerkey.com">https://rrbgroupdanswerkey.com</a> – is published in good faith and for general information purpose only. We do not make any warranties about the completeness, reliability and accuracy of this information. Any action you take upon the information you find on this website, is strictly at your own risk. We will not be liable for any losses and/or damages in connection with the use of our website.</p>
+        <p className="static-lead" style={{ textAlign: 'center' }}>
+          All information, tools, score calculators, and analytical guides published on{' '}
+          <strong>RRB Group D Answer Key Portal</strong> (<Link href="/" style={{ color: '#0066ff', textDecoration: 'underline' }}>rrbgroupdanswerkey.com</Link>) are provided in good faith and intended strictly for educational, informational, and preparatory guidance.
+        </p>
 
-          <p>From our website, you can visit other websites by following hyperlinks to such external sites. While we strive to provide only quality links to useful and ethical websites, we have no control over the content and nature of these sites. These links to other websites do not imply a recommendation for all the content found on these sites. Site owners and content may change without notice and may occur before we have the opportunity to remove a link which may have gone &apos;bad&apos;.</p>
+        <div>
+          <h2 className="static-section-title">1. Independent Status &amp; Non-Affiliation Notice</h2>
+          <p className="static-lead">
+            <strong>RRB Group D Answer Key Portal is a strictly independent, privately operated educational platform.</strong> We are <strong>NOT affiliated, associated, authorized, endorsed by, or in any way officially connected with the Railway Recruitment Board (RRB), the Railway Recruitment Cell (RRC), the Ministry of Railways, the Government of India, or any state or central governmental recruiting organization.</strong>
+          </p>
+          <p className="static-lead">
+            The official portal for all Indian Railways central recruitments is{' '}
+            <a href="https://www.rrbapply.gov.in" target="_blank" rel="noopener noreferrer" style={{ color: '#0066ff', textDecoration: 'underline' }}>
+              rrbapply.gov.in
+            </a>
+            , along with respective regional websites (such as rrbcdg.gov.in, rrbpatna.gov.in, rrbmumbai.gov.in, etc.). Candidates must always refer to official railway gazettes and circulars for binding announcements.
+          </p>
+        </div>
 
-          <p>Please be also aware that when you leave our website, other sites may have different privacy policies and terms which are beyond our control. Please be sure to check the Privacy Policies of these sites as well as their &quot;Terms of Service&quot; before engaging in any business or uploading any information.</p>
+        <div>
+          <h2 className="static-section-title">2. Automated Answer Key &amp; Score Calculator Disclaimer</h2>
+          <p className="static-lead">
+            The response sheet parser and raw score calculator hosted on this portal are <strong>100% program-driven automated software tools</strong>:
+          </p>
+          <ul className="static-feature-list">
+            <li>
+              <strong>Algorithmic Evaluation:</strong> Our algorithms parse the HTML structure of candidate response sheets and match selected responses with keys designated as correct in the candidate sheet.
+            </li>
+            <li>
+              <strong>Tentative / Provisional Data:</strong> All calculations rely on provisional answer keys. Changes made by Railway Recruitment Boards after the objection window (such as dropped questions or revised keys) may affect final scores.
+            </li>
+            <li>
+              <strong>Raw vs. Normalized Marks:</strong> The calculator outputs <em>estimated raw marks</em> based on 1/3 negative marking. It does not calculate official multi-shift percentile normalization, which is conducted solely by RRB using internal proprietary formulas.
+            </li>
+            <li>
+              <strong>No Guarantee of Qualification:</strong> Any indicative ranks, percentiles, or raw scorecards generated by our tools do not guarantee selection, qualification for PET, or inclusion in the final railway merit list.
+            </li>
+          </ul>
+        </div>
 
-          <h2>Non-Affiliation / Government Disclaimer</h2>
-          <p><strong>IMPORTANT:</strong> Please note that <strong>RRB Group D Answer Key Portal</strong> is an independent educational and informational website. <strong>We are NOT associated, affiliated, authorized, endorsed by, or in any way officially connected with the Railway Recruitment Board (RRB), Railway Recruitment Cell (RRC), Ministry of Railways, or any other department of the Government of India.</strong></p>
+        <div>
+          <h2 className="static-section-title">3. Content Accuracy &amp; Notification Timelines</h2>
+          <p className="static-lead">
+            While our editorial staff makes every effort to verify syllabus topics, eligibility criteria, exam patterns, and vacancy figures from official Centralized Employment Notices (CEN), exam boards frequently issue corrigenda and addenda. We make no representations or warranties regarding the absolute completeness, timeliness, or accuracy of any content. Candidates are advised to cross-check all dates and requirements on the official regional portals.
+          </p>
+        </div>
 
-          <p>The official website of the Railway Recruitment Board can be accessed at <a href="http://www.rrbcdg.gov.in" target="_blank" rel="noopener noreferrer">http://www.rrbcdg.gov.in</a> and other regional RRB portals. Candidates are strongly advised to check the official government notifications and press releases for authoritative instructions.</p>
+        <div>
+          <h2 className="static-section-title">4. Third-Party Links &amp; External Portals</h2>
+          <p className="static-lead">
+            Throughout our website, you may encounter hyperlinks directing you to external websites—including official government recruitment portals, objection filing windows, and educational references. While we strive to provide only ethical and secure links, we have no administrative control over external site contents or server stability. Hyperlinks do not constitute an endorsement of external third-party entities.
+          </p>
+        </div>
 
-          <h2>Update</h2>
-          <p>Should we update, amend or make any changes to this document, those changes will be prominently posted here.</p>
+        <div>
+          <h2 className="static-section-title">5. Limitation of Liability</h2>
+          <p className="static-lead">
+            Under no circumstances shall RRB Group D Answer Key Portal, its creators, or administrators be held liable for any direct, indirect, incidental, or consequential loss, injury, or inconvenience resulting from reliance on the information, calculation outputs, or technical downtime of this website.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="static-section-title">6. User Consent &amp; Grievances</h2>
+          <p className="static-lead">
+            By utilizing our website and automated tools, you hereby consent to our Disclaimer and accept all terms stipulated herein. If you identify any typographical error or discrepancies in our articles or tool outputs, please notify us immediately through our{' '}
+            <Link href="/contact" style={{ color: '#0066ff', textDecoration: 'underline', fontWeight: 600 }}>
+              Contact Us Page
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>

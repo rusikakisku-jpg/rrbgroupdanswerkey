@@ -86,7 +86,7 @@ export default async function HomePagePaginated({ params }: PageRouteProps) {
         {/* Main Content Area */}
         <div className="content-area">
           <div className="section-head">
-            <h2 className="section-title">Latest Posts (Page {currentPage})</h2>
+            <h2 className="section-title">Latest Exam Updates</h2>
           </div>
 
           <div id="blog-entries">

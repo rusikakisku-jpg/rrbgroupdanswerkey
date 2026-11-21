@@ -73,9 +73,7 @@ export default async function HomePage() {
         {/* Main Content Area */}
         <div className="content-area">
           <div className="section-head">
-            <h2 className="section-title">
-              {currentPage > 1 ? `Latest Posts (Page ${currentPage})` : 'Latest Posts'}
-            </h2>
+            <h2 className="section-title">Latest Exam Updates</h2>
           </div>
 
           <div id="blog-entries">
